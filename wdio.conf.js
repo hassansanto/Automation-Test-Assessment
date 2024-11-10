@@ -1,3 +1,7 @@
+const wrongLogIn = "./test/specs/errorLogIn.spec.js"
+const productPurchase = "./test/specs/purchaseJourney.spec.js";
+const conditionalPurchase = "./test/specs/conditionalPurchaseJourney.spec.js";
+
 exports.config = {
     //
     // ====================
@@ -20,9 +24,11 @@ exports.config = {
     // The path of the spec files will be resolved relative from the directory of
     // of the config file unless it's absolute.
     //
-    specs: [
-        './test/specs/**/*.js'
-    ],
+    specs: [wrongLogIn, productPurchase, conditionalPurchase],
+
+    suites:{
+        purchase:[wrongLogIn, productPurchase, conditionalPurchase],
+    },
     // Patterns to exclude.
     exclude: [
         // 'path/to/excluded/files'
@@ -85,7 +91,7 @@ exports.config = {
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
-    // baseUrl: 'http://localhost:8080',
+    baseUrl: "https://www.saucedemo.com/",
     //
     // Default timeout for all waitFor* commands.
     waitforTimeout: 10000,
@@ -125,6 +131,17 @@ exports.config = {
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
     // reporters: ['dot'],
+
+    reporters: [
+        [
+          "allure",
+          {
+            outputDir: "allure-results",
+            disableWebdriverStepsReporting: true,
+            disableWebdriverScreenshotsReporting: false,
+          },
+        ],
+      ],
 
     // Options to be passed to Mocha.
     // See the full list at http://mochajs.org/
@@ -198,8 +215,10 @@ exports.config = {
      * Hook that gets executed before the suite starts
      * @param {object} suite suite details
      */
-    // beforeSuite: function (suite) {
-    // },
+    beforeSuite: async function (suite) {
+        await browser.maximizeWindow();
+        await browser.url(this.baseUrl);
+    },
     /**
      * Function to be executed before a test (in Mocha/Jasmine) starts.
      */
@@ -227,16 +246,25 @@ exports.config = {
      * @param {boolean} result.passed    true if test has passed, otherwise false
      * @param {object}  result.retries   information about spec related retries, e.g. `{ attempts: 0, limit: 0 }`
      */
-    // afterTest: function(test, context, { error, result, duration, passed, retries }) {
-    // },
+    afterTest: async function(test, context, { error, result, duration, passed, retries }) {
+        if (error) {
+            const screenshot = await browser.takeScreenshot();
+            allure.addAttachment(
+              "Screenshot",
+              Buffer.from(screenshot, "base64"),
+              "failure/png"
+            );
+        }
+    },
 
 
     /**
      * Hook that gets executed after the suite has ended
      * @param {object} suite suite details
      */
-    // afterSuite: function (suite) {
-    // },
+    afterSuite: async function (suite) {
+    
+    },
     /**
      * Runs after a WebdriverIO command gets executed
      * @param {string} commandName hook command name
@@ -292,4 +320,4 @@ exports.config = {
     */
     // afterAssertion: function(params) {
     // }
-}
+};
