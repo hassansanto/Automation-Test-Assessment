@@ -3,6 +3,7 @@ This repository comprises automated test scripts designed for the Sauce Demo e-c
 
 
 **Project Overview**
+
 This project contains three main test scenarios for the Sauce Demo website:
 
 Invalid Login: Try login with locked_out_user and verify the error message.
