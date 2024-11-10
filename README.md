@@ -1,4 +1,4 @@
-This repository comprises automated test scripts designed for the Sauce Demo e-commerce website(https://www.saucedemo.com/), utilizing WebdriverIO and the Page Object Model (POM) framework to ensure that the test cases are modular, maintainable, and reusable.
+This repository comprises automated test scripts designed for the Sauce Demo e-commerce website (https://www.saucedemo.com/) , utilizing WebdriverIO and the Page Object Model (POM) framework to ensure that the test cases are modular, maintainable, and reusable.
 
 
 
